@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default">
+<head>
+
+    <title>个人信息</title>
+</head>
+<body>
+    <div class="col-lg-10" layout:fragment="pageheader">
+        <h2>首页</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="/">首页</a>
+            </li>
+            <li class="active">
+                <strong>个人信息</strong>
+            </li>
+
+        </ol>
+    </div>
+    <div layout:fragment="content" class="row animated fadeInRight">
+        <div class="col-md-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>详细信息</h5>
+                </div>
+                <div>
+                    <div class="ibox-content no-padding border-left-right">
+                        <img alt="image" class="img-responsive" src="/resources/img/profile_big.jpg">
+                    </div>
+                    <div class="ibox-content profile-content">
+                        <!--/*@thymesVar id="userdetail" type="entitys.UserdetailEntity"*/-->
+                        <h4>
+
+                            <strong th:text="${userdetail.getUsername()}">Monica Smith</strong>
+                        </h4>
+                        <p>
+                            部门:<strong th:text="${userdetail.getDepartment()}"></strong>
+                        </p>
+                        <p>
+                            职位:<strong th:text="${userdetail.getPosition()}"></strong>
+                        </p>
+                        <p>
+                          手机号码:<strong th:text="${userdetail.getTel()}"></strong>
+                        </p>
+                        <p>
+                            邮箱:<strong th:text="${userdetail.getEmail()}"></strong>
+                        </p>
+                        <div class="user-button">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <button type="button" class="btn btn-primary btn-sm btn-block">
+                                        <i class="fa fa-envelope"></i> 编辑</button>
+                                </div>
+                                <div th:if="${userdetail}" class="col-md-6">
+                                    <button type="button" class="btn btn-default btn-sm btn-block">
+                                        <i class="fa fa-coffee"></i> 发送消息</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>我的异常处理小组</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li>
+                                <a href="#">Config option 1</a>
+                            </li>
+                            <li>
+                                <a href="#">Config option 2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content"></div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

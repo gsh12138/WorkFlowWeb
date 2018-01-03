@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default">
+<head>
+    <meta charset="UTF-8"/>
+    <title>home</title>
+</head>
+<body>
+    <div class="col-lg-10" layout:fragment="pageheader">
+        <h2>首页</h2>
+        <ol class="breadcrumb">
+            <li class="active">
+                <a href="/">首页</a>
+            </li>
+
+        </ol>
+    </div>
+    <div class="row" layout:fragment="content">
+        <h1>你好</h1>
+
+        <h1 th:text="${bumen}"></h1>
+
+        <a th:href="@{/home}">test</a>
+    </div>
+
+
+</body>
+</html>
