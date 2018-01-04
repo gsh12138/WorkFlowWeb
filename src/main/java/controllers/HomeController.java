@@ -39,6 +39,11 @@ public class HomeController {
         return "profile";
     }
 
+    @RequestMapping(value = "editProfile",method = RequestMethod.GET)
+    public String editProfile(){
+        return "editprofile";
+    }
+
     @RequestMapping(value = "home",method = RequestMethod.GET)
     public String home() {
         FullFlow fullFlow = flowDate.findFullFlow("test-20171127002");
