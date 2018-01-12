@@ -34,6 +34,38 @@ public class MyUserDetailsService implements UserDetailsService {
 
         final UserdetailEntity userdetailEntity = userDetailRepository.findByUserid(s);
 
+        if(userEntity!=null&&userdetailEntity==null){
+            return new UserDetails() {
+                public Collection<? extends GrantedAuthority> getAuthorities() {
+                    return null;
+                }
+
+                public String getPassword() {
+                    return userEntity.getPassword();
+                }
+
+                public String getUsername() {
+                    return userEntity.getUserid();
+                }
+
+                public boolean isAccountNonExpired() {
+                    return true;
+                }
+
+                public boolean isAccountNonLocked() {
+                    return true;
+                }
+
+                public boolean isCredentialsNonExpired() {
+                    return true;
+                }
+
+                public boolean isEnabled() {
+                    return true;
+                }
+            };
+        }
+
         if (userEntity != null && userdetailEntity != null) {
             final List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
             String[] authoritys = userdetailEntity.getRoles().split(",");

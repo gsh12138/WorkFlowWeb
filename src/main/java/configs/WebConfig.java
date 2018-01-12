@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ViewResolver;
@@ -16,6 +19,10 @@ import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
+
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by tech on 2017/12/19.
@@ -51,6 +58,17 @@ public class WebConfig implements WebMvcConfigurer {
         configurer.enable();
     }
 
+
+    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+        for (HttpMessageConverter converter:converters
+             ) {
+            if(converter instanceof StringHttpMessageConverter){
+                ((StringHttpMessageConverter) converter).setDefaultCharset(Charset.forName("UTF-8"));
+                break;
+            }
+        }
+    }
+
     @Bean
     public ViewResolver viewResolver(SpringTemplateEngine templateEngine){
         ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
@@ -79,4 +97,6 @@ public class WebConfig implements WebMvcConfigurer {
         return templateResolver;
 
     }
+
+
 }

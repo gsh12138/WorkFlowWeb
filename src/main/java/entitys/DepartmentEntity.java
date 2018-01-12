@@ -16,6 +16,7 @@ public class DepartmentEntity {
     private String departmentname;
     private Integer departmentrole;
     private String charge;
+    private String superior;
 
     @Id
     @Column(name = "id")
@@ -67,6 +68,16 @@ public class DepartmentEntity {
         this.charge = charge;
     }
 
+    @Basic
+    @Column(name = "superior")
+    public String getSuperior() {
+        return superior;
+    }
+
+    public void setSuperior(String superior) {
+        this.superior = superior;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -81,6 +92,7 @@ public class DepartmentEntity {
                 .append(departmentname, that.departmentname)
                 .append(departmentrole, that.departmentrole)
                 .append(charge, that.charge)
+                .append(superior,that.superior)
                 .isEquals();
     }
 
@@ -92,6 +104,7 @@ public class DepartmentEntity {
                 .append(departmentname)
                 .append(departmentrole)
                 .append(charge)
+                .append(superior)
                 .toHashCode();
     }
 }

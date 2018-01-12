@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorator="layout/default">
+<head>
+    <title>异常小组成员</title>
+</head>
+<body>
+
+<div class="col-lg-10" layout:fragment="pageheader">
+    <h2>首页</h2>
+    <ol class="breadcrumb">
+        <li>
+            <a href="/">首页</a>
+        </li>
+        <li class="active">
+            <strong>异常小组成员</strong>
+        </li>
+
+    </ol>
+</div>
+
+<div class="row animated fadeInRight" layout:fragment="content">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>异常小组成员</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <!--/*@thymesVar id="userdetail" type="entitys.UserdetailEntity"*/-->
+                        <li th:if="${userdetail.getUserid().equals(charger)}">
+                            <a th:href="'/ycclgroup/seletcMember?groupid='+${groupid}">添加成员</a>
+                        </li>
+
+                    </ul>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>工号</th>
+                            <th>姓名</th>
+                            <th>添加时间</th>
+                            <th>状态</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="member:${members}">
+                            <td th:text="${member.getMemberid()}">工号</td>
+                            <td th:text="${member.getMembername()}">姓名</td>
+                            <td th:text="${#dates.format(member.getJoindate(),'yyyy-MM-dd')}">添加时间</td>
+                            <td th:if="${member.getState().equals('1')}">
+                                <span class="label label-primary">已激活</span>
+                            </td>
+                            <td th:if="${!member.getState().equals('1')}">
+                                <span class="label label-danger">未激活</span>
+                            </td>
+                            <!--/*@thymesVar id="userdetail" type="entitys.UserdetailEntity"*/-->
+                            <td>
+                                <a th:if="${userdetail.getUserid().equals(charger)&&!userdetail.getUserid().equals(member.getMemberid())}"
+                                        th:href="'/ycclgroup/delete/'+${groupid}+'/'+${member.getMemberid()}"
+                                   class="btn btn-danger btn-xs">删除</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="hr-line-dashed"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

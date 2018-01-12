@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorator="layout/default">
+<head>
+    <title>创建异常处理小组</title>
+</head>
+<body>
+
+<div class="col-lg-10" layout:fragment="pageheader">
+    <h2>首页</h2>
+    <ol class="breadcrumb">
+        <li>
+            <a href="/">首页</a>
+        </li>
+        <li class="active">
+            <strong>创建异常处理小组</strong>
+        </li>
+
+    </ol>
+</div>
+
+<div class="row animated fadeInRight" layout:fragment="content">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>创建异常处理小组</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li>
+                            <a href="#">Config option 1</a>
+                        </li>
+                        <li>
+                            <a href="#">Config option 2</a>
+                        </li>
+                    </ul>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <form th:action="@{/ycclgroup/creat}" method="post" class="form-horizontal">
+                    <!--/*@thymesVar id="userdetail" type="entitys.UserdetailEntity"*/-->
+                    <div class="form-group">
+                        <label for="groupname" class="col-sm-2 control-label">小组名称</label>
+                        <div class="col-sm-10">
+                            <input id="groupname" name="groupname" type="text" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+
+
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-8">
+                            <button class="btn btn-primary btn-w-m" type="submit">创建</button>
+                            <a href="/privateProfile" class="btn-w-m btn btn-white">取消</a>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

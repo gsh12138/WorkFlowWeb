@@ -68,7 +68,7 @@
                     <h5>我的异常处理小组</h5>
 
                     <div class="ibox-tools">
-                        <a class="btn btn-primary btn-xs">
+                        <a th:href="@{/ycclgroup/creat}" class="btn btn-primary btn-xs">
                             <i class="fa fa-plus"></i>
                              新建小组</a>
                         <a class="collapse-link">
@@ -90,7 +90,37 @@
                         </a>
                     </div>
                 </div>
-                <div class="ibox-content"></div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>名称</th>
+                                <th>创建日期</th>
+
+                                <th>负责人</th>
+                                <th></th>
+                                <th></th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <tr th:each="group:${grouplist}">
+
+                                <td th:text="${group.getGroupname()}">名称</td>
+                                <td th:text="${#dates.format(group.getCreatdate(),'yyyy-MM-dd')}">创建日期</td>
+                                <td th:text="${group.getCharger()}">负责人</td>
+                                <td><a class="btn btn-primary btn-xs" th:href="'/ycclgroup/members/'+${group.getGroupid()}">查看</a></td>
+                                <!--/*@thymesVar id="userdetail" type="entitys.UserdetailEntity"*/-->
+                                <td><a  th:if="${userdetail.getUserid().equals(group.getCharger())}"
+                                        class="btn btn-danger btn-xs" th:href="'/ycclgroup/dissolution/'+${group.getGroupid()}">解散小组</a></td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
