@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorator="/layout/default">
+<head>
+    <title>title</title>
+    <link th:href="@{/resources/css/plugins/datapicker/datepicker3.css}" rel="stylesheet">
+    <link th:href="@{/resources/css/plugins/summernote/summernote.css}" rel="stylesheet">
+    <link th:href="@{/resources/css/plugins/summernote/summernote-bs3.css}" rel="stylesheet">
+</head>
+<body>
+<div class="col-lg-10" layout:fragment="pageheader">
+    <h2>首页</h2>
+    <ol class="breadcrumb">
+        <li>
+            <a href="/">首页</a>
+        </li>
+        <li class="active">
+            <strong>发起异常</strong>
+        </li>
+
+    </ol>
+</div>
+
+<div class="row animated fadeInRight" layout:fragment="content">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>发起异常</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li>
+                            <a href="#">Config option 1</a>
+                        </li>
+                        <li>
+                            <a href="#">Config option 2</a>
+                        </li>
+                    </ul>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <form action="" method="post" class="form-horizontal">
+                    <!--/*@thymesVar id="userdetail" type="entitys.UserdetailEntity"*/-->
+                    <div class="form-group">
+                        <label for="happendate" class="control-label col-sm-2">发生日期</label>
+                        <div class="col-sm-5">
+                            <div class="input-group date datapicker">
+                                <input id="happendate" name="happendate" type="text" class="form-control"/>
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label for="handteam" class="col-sm-2 control-label">处理小组</label>
+                        <div class="col-sm-5">
+                            <select class="form-control m-b" name="handteam" id="handteam">
+                                <option>option 1</option>
+                                <option>option 2</option>
+                                <option>option 3</option>
+                                <option>option 4</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label for="theme" class="col-sm-2 control-label">主题</label>
+                        <div class="col-sm-10">
+                            <input id="theme" name="email" type="text" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label for="exclass" class="col-sm-2 control-label">异常分类</label>
+                        <div class="col-sm-5">
+                            <select class="form-control m-b" name="exclass" id="exclass">
+                                <option>option 1</option>
+                                <option>option 2</option>
+                                <option>option 3</option>
+                                <option>option 4</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label for="content" class="col-sm-2 control-label">异常描述</label>
+                        <div class="col-sm-10">
+                            <textarea class="summernote" name="content" id="content"></textarea>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label for="other" class="col-sm-2 control-label">其他信息</label>
+                        <div class="col-sm-10">
+                            <div class="summernote" id="other"></div>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label for="updatefile" class="col-sm-2 control-label">上传文件</label>
+                        <div class="col-sm-10">
+                            <input id="updatefile" name="updatefile" type="file"  class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-8">
+                            <button class="btn btn-primary btn-w-m" type="submit">提交</button>
+                            <a href="/privateProfile" class="btn-w-m btn btn-white">取消</a>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div layout:fragment="addjs">
+    <script th:src="@{/resources/js/plugins/datapicker/bootstrap-datepicker.js}"></script>
+    <script th:src="@{/resources/js/plugins/summernote/summernote.min.js}"></script>
+    <script th:src="@{/resources/js/plugins/summernote/summernote-zh-CN.js}"></script>
+</div>
+
+
+<script layout:fragment="script">
+
+    $.fn.datepicker.dates['zh'] = {
+        days: ["星期天", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
+        daysShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+        daysMin: ["日", "一", "二", "三", "四", "五", "六"],
+        months: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"],
+        monthsShort: ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"],
+        today: "今天",
+        clear: "清除",
+        format: "yyyy-MM-dd",
+        titleFormat: "yyyy年MM月", /* Leverages same syntax as 'format' */
+        weekStart: 0
+    };
+    $('.datapicker').datepicker({
+        todayBtn: "linked",
+        keyboardNavigation: false,
+        forceParse: false,
+        calendarWeeks: true,
+        autoclose: true,
+        language: 'zh',
+        format:"yyyy-MM-dd"
+    });
+    $('.summernote').summernote({
+        height:300,
+        minHeight: null,
+        maxHeight: null,
+        lang: 'zh-CN'
+    });
+</script>
+
+</body>
+</html>

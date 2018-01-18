@@ -227,6 +227,7 @@
 <script th:src="@{/resources/js/inspinia.js}"></script>
 <script th:src="@{/resources/js/plugins/pace/pace.min.js}"></script>
 <script th:src="@{/resources/js/plugins/sweetalert/sweetalert.min.js}"></script>
+    <div layout:fragment="addjs"></div>
     <script>
         function nomorMessageClick(messageid,that){
             $.get('/message/nomorl/'+messageid,function (date) {
@@ -273,6 +274,7 @@
 
         }
     </script>
+    <script layout:fragment="script"></script>
 
 
 <!-- Flot -->
