@@ -62,21 +62,21 @@
                     </li>
                     <!--/*@thymesVar id="active" type="helpers.ActiveNav"*/-->
                     <li th:class="${active.getMainName().equals('Home')}?'active':null">
-                        <a href="#">
+                        <a href="/">
                             <i class="fa fa-diamond"></i>
                             <span class="nav-label">首页</span>
                         </a>
                     </li>
 
-                    <li>
+                    <li th:class="${active.getMainName().equals('ExceptionHandling')}?'active':null">
                         <a href="#">
                             <i class="fa fa-edit"></i>
                             <span class="nav-label">异常处理</span>
                             <span class="fa arrow"></span>
                         </a>
                         <ul class="nav nav-second-level">
-                            <li>
-                                <a href="form_basic.html">发起异常</a>
+                            <li th:class="${active.getName().equals('launch')}?'active':null">
+                                <a th:href="@{/exceptionHandle/launch}">发起异常</a>
                             </li>
                             <li>
                                 <a href="form_advanced.html">需处理</a>

@@ -2,6 +2,9 @@ package configs;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+import javax.servlet.MultipartConfigElement;
+import javax.servlet.ServletRegistration;
+
 
 /**
  * Created by tech on 2017/12/19.
@@ -19,5 +22,11 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
         return new String[]{"/"};
     }
 
+    @Override
+    protected void customizeRegistration(ServletRegistration.Dynamic registration) {
+        registration.setMultipartConfig(
+                new MultipartConfigElement("E:/OAfiles",2097152,4194304,0)
+        );
 
+    }
 }

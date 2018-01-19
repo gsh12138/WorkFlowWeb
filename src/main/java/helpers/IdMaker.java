@@ -1,8 +1,10 @@
 package helpers;
 
+import entitys.ExceptionEntity;
 import entitys.MainFlowEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import repositorys.mySqlRepositorys.ExceptionRepository;
 import repositorys.mySqlRepositorys.MainFlowRepository;
 
 import java.util.Calendar;
@@ -19,13 +21,19 @@ public class IdMaker {
 
 
     private static MainFlowRepository repository;
+    private static ExceptionRepository exceptionRepository;
 
     @Autowired
     public void setRepository(MainFlowRepository repository) {
         IdMaker.repository = repository;
     }
 
-    static String makeFlowId(String prf){
+    @Autowired
+    public void setExceptionRepository(ExceptionRepository exceptionRepository) {
+        IdMaker.exceptionRepository = exceptionRepository;
+    }
+
+    public static String makeFlowId(String prf){
         Date today = new Date();
 
         Calendar calendar = Calendar.getInstance();
@@ -45,6 +53,25 @@ public class IdMaker {
         }
         else {
             return prff+"001";
+        }
+    }
+
+    public static String makeExceptionId(){
+        Date today = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(today);
+        String year = String.format("%04d",calendar.get(Calendar.YEAR));
+        String mouth = String.format("%02d",calendar.get(Calendar.MONTH)+1);
+        String day = String.format("%02d",calendar.get(Calendar.DAY_OF_MONTH));
+        String temid = year+mouth+day;
+        List<ExceptionEntity> exceptionEntities = exceptionRepository.findMax(today);
+        if(exceptionEntities.size()!=0){
+            String id = exceptionEntities.get(0).getBid();
+            int tt = Integer.valueOf(id)+1;
+            return String.format(id);
+        }
+        else {
+            return temid+"001";
         }
     }
 }

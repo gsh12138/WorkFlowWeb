@@ -26,6 +26,7 @@ public class ExceptionEntity {
     private Boolean knowledege;
     private Boolean fracas;
     private String updatefile;
+    private String updatefilename;
 
     @Id
     @Column(name = "id")
@@ -165,6 +166,16 @@ public class ExceptionEntity {
 
     public void setUpdatefile(String updatefile) {
         this.updatefile = updatefile;
+    }
+
+    @Basic
+    @Column(name = "updatefilename")
+    public String getUpdatefilename() {
+        return updatefilename;
+    }
+
+    public void setUpdatefilename(String updatefilename) {
+        this.updatefilename = updatefilename;
     }
 
     @Override

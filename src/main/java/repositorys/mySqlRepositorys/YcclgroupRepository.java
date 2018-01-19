@@ -20,4 +20,8 @@ public interface YcclgroupRepository extends CrudRepository<YcclgroupEntity,Inte
 
     @Transactional
     void deleteByGroupid(String groupid);
+
+    List<YcclgroupEntity> findAll();
+
+    YcclgroupEntity findByGroupname(String groupname);
 }
