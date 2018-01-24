@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="/layout/default">
+<head>
+    <link th:href="@{/resources/css/plugins/summernote/summernote.css}" rel="stylesheet">
+    <link th:href="@{/resources/css/plugins/summernote/summernote-bs3.css}" rel="stylesheet">
+    <link th:href="@{/resources/css/plugins/jasny/jasny-bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/resources/css/plugins/codemirror/codemirror.css}" rel="stylesheet">
+    <link th:href="@{/resources/css/plugins/codemirror/ambiance.css}" rel="stylesheet">
+    <title>异常处理</title>
+</head>
+<body>
+<div class="col-lg-10" layout:fragment="pageheader">
+    <h2>首页</h2>
+    <ol class="breadcrumb">
+        <li>
+            <a href="/">首页</a>
+        </li>
+        <li class="active">
+            <strong>异常详情</strong>
+        </li>
+
+    </ol>
+</div>
+
+<div class="gray-bg"  layout:fragment="content">
+<div class="fh-breadcrumb">
+    <div class="fh-column">
+        <div class="full-height-scroll">
+            <ul class="list-group elements-list">
+                <li th:class="${currhandlingid}?'list-group-item':'list-group-item  active'">
+                    <a th:href="'/exceptionHandle/exception/'+${detile.bid}">
+                        <small th:text="${detile.creatdate}" class="pull-right text-muted"> 16.02.2015</small>
+                        <strong th:text="${detile.creatdep}">Ann Smith</strong>
+                        <div class="small m-t-xs">
+                            <p th:text="${detile.theme}">
+                                Survived not only five centuries, but also the leap scrambled it to make.
+                            </p>
+                            <p class="m-b-none">
+                                <span class="label pull-right label-primary">当前步骤</span>
+                                <i class="fa fa-map-marker"></i> <span th:text="${detile.handleteam}"></span>
+                            </p>
+                        </div>
+                    </a>
+                </li>
+                <li th:each="handling:${handlingList}"
+                    th:class="${currhandlingid==handling.id}?'list-group-item active':'list-group-item'">
+                    <a th:href="'/exceptionHandle/exception/'+${handling.bid}+'?hid='+${handling.id}">
+                        <small th:text="${handling.finishdate}" class="pull-right text-muted"> 16.02.2015</small>
+                        <strong th:text="${handling.handler}">Ann Smith</strong>
+                        <div class="small m-t-xs">
+                            <p th:text="${handling.keyword}">
+                                Survived not only five centuries, but also the leap scrambled it to make.
+                            </p>
+                            <p class="m-b-none">
+                                <span class="label pull-right label-primary">当前步骤</span>
+                                <i class="fa fa-map-marker"></i> <span th:text="${detile.handleteam}"></span>
+                            </p>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="full-height">
+        <div class="full-height-scroll white-bg border-left">
+            <div class="element-detail-box">
+                <div class="tab-content">
+                    <div th:unless="${currhandling}" class="tab-pane active">
+                        <div class="small text-muted">
+                            <i class="fa fa-clock-o"></i> <span th:text="${detile.happendate}"></span>
+                        </div>
+                        <div>
+                            <h1 th:text="'主题:'+' '+${detile.theme}"></h1>
+                            <p th:text="'发生日期: '+${detile.happendate}"></p>
+                            <p th:text="'填报人: '+${detile.creater}"></p>
+                            <p th:text="'异常描述'"></p>
+                            <p th:utext="${detile.content}"></p>
+                        </div>
+                        <div class="m-t-lg" th:if="${detile.getUpdatefilename()}">
+                            <p>
+                                <span><i class="fa fa-paperclip"> 附件</i></span>
+                            </p>
+                            <div class="attachment">
+                                <div class="file-box">
+                                    <div class="file">
+                                        <a href="#">
+                                            <span class="corner"></span>
+
+                                            <div class="icon">
+                                                <i class="fa fa-file"></i>
+                                            </div>
+                                            <div class="file-name">
+                                                <a th:href="'/exceptionHandle/downloadfile/'+${detile.bid}"
+                                                    th:text="${detile.updatefilename}"></a>
+
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-title">
+                                        <h5>处理异常</h5>
+                                        <div class="ibox-tools">
+                                            <a class="collapse-link">
+                                                <i class="fa fa-chevron-up"></i>
+                                            </a>
+                                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                                <i class="fa fa-wrench"></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-user">
+                                                <li>
+                                                    <a href="#">Config option 1</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Config option 2</a>
+                                                </li>
+                                            </ul>
+                                            <a class="close-link">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="ibox-content">
+                                        <form action="" method="post" class="form-horizontal" enctype="multipart/form-data">
+                                            <div class="form-group">
+                                                <label for="keyword" class="col-sm-2 control-label">关键词</label>
+                                                <div class="col-sm-10">
+                                                    <input id="keyword" name="keyword" type="text" class="form-control"/>
+                                                </div>
+                                            </div>
+                                            <div class="hr-line-dashed"></div>
+                                            <div class="form-group">
+                                                <label for="reason" class="col-sm-2 control-label">原因分析</label>
+                                                <div class="col-sm-10">
+                                                    <textarea class="summernote" name="reason" id="reason"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="hr-line-dashed"></div>
+                                            <div class="form-group">
+                                                <label for="result" class="col-sm-2 control-label">整改结果</label>
+                                                <div class="col-sm-10">
+                                                    <textarea class="summernote" name="result" id="result"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="hr-line-dashed"></div>
+                                            <div class="form-group">
+                                                <label for="file" class="col-sm-2 control-label">上传文件</label>
+                                                <div class="col-sm-10">
+                                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                <span class="btn btn-default btn-file">
+                                    <span class="fileinput-new">选择文件</span>
+                                    <span class="fileinput-exists">重选文件</span>
+                                    <input type="file" id="file" name="file">
+                                </span>
+                                                        <span class="fileinput-filename"></span>
+                                                        <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">&times;</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="hr-line-dashed"></div>
+                                            <div class="form-group">
+                                                <div class="col-sm-4 col-sm-offset-8">
+                                                    <button class="btn btn-primary btn-w-m" type="submit">提交</button>
+
+                                                </div>
+
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div  th:if="${currhandling}" class="tab-pane active">
+                        <div class="small text-muted">
+                            <i class="fa fa-clock-o"></i> <span th:text="${currhandling.finishdate}"></span>
+                        </div>
+                        <div>
+                            <h1 th:text="'关键字:'+' '+${currhandling.keyword}"></h1>
+                            <p th:text="'处理人: '+${currhandling.handler}"></p>
+                            <p th:text="'原因分析:'"></p>
+                            <p th:utext="${currhandling.reason}"></p>
+                            <p th:text="'整改结果'"></p>
+                            <p th:utext="${currhandling.result}"></p>
+                        </div>
+                        <div class="m-t-lg" th:if="${currhandling.getUpdatefilename()}">
+                            <p>
+                                <span><i class="fa fa-paperclip"> 附件</i></span>
+                            </p>
+                            <div class="attachment">
+                                <div class="file-box">
+                                    <div class="file">
+                                        <a href="#">
+                                            <span class="corner"></span>
+
+                                            <div class="icon">
+                                                <i class="fa fa-file"></i>
+                                            </div>
+                                            <div class="file-name">
+                                                <a th:href="'/exceptionHandle/downloadfile/'+${detile.bid}"
+                                                   th:text="${detile.updatefilename}"></a>
+
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-title">
+                                        <h5>反馈异常</h5>
+                                        <div class="ibox-tools">
+                                            <a class="collapse-link">
+                                                <i class="fa fa-chevron-up"></i>
+                                            </a>
+                                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                                <i class="fa fa-wrench"></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-user">
+                                                <li>
+                                                    <a href="#">Config option 1</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Config option 2</a>
+                                                </li>
+                                            </ul>
+                                            <a class="close-link">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="ibox-content">
+                                        <form action="" method="post" class="form-horizontal" enctype="multipart/form-data">
+
+                                            <div class="form-group">
+                                                <label for="returnreason" class="col-sm-2 control-label">打回原因</label>
+                                                <div class="col-sm-10">
+                                                    <textarea class="summernote" name="returnreason" id="returnreason"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="hr-line-dashed"></div>
+
+                                            <div class="hr-line-dashed"></div>
+                                            <div class="form-group">
+                                                <div class="col-sm-6 col-sm-offset-6">
+                                                    <button class="btn btn-primary btn-w-m" type="submit">关闭</button>
+                                                    <button class="btn btn-danger btn-w-m" type="submit">打回</button>
+                                                </div>
+
+
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div layout:fragment="addjs">
+    <script th:src="@{/resources/js/plugins/datapicker/bootstrap-datepicker.js}"></script>
+    <script th:src="@{/resources/js/plugins/summernote/summernote.min.js}"></script>
+    <script th:src="@{/resources/js/plugins/summernote/summernote-zh-CN.js}"></script>
+    <script th:src="@{/resources/js/plugins/datapicker/bootstrap-datepicker.zh-CN.js}"></script>
+    <script th:src="@{/resources/js/plugins/jasny/jasny-bootstrap.min.js}"></script>
+</div>
+
+<script layout:fragment="script">
+
+
+    $('.summernote').summernote({
+        toolbar:[
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']]
+        ],
+        height:300,
+        minHeight: null,
+        maxHeight: null,
+        lang: 'zh-CN'
+    });
+</script>
+
+
+</body>
+</html>

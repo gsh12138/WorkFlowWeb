@@ -11,7 +11,7 @@ import java.sql.Date;
  */
 @Entity
 @Table(name = "handling", schema = "oasystemdev", catalog = "")
-public class HandlingEntity {
+public class HandlingEntity implements HaveUpdateFileEntity {
     private int id;
     private String bid;
     private String keyword;
@@ -20,6 +20,7 @@ public class HandlingEntity {
     private Date finishdate;
     private String handler;
     private String updatefile;
+    private String updatefilename;
 
     @Id
     @Column(name = "id")
@@ -99,6 +100,16 @@ public class HandlingEntity {
 
     public void setUpdatefile(String updatefile) {
         this.updatefile = updatefile;
+    }
+
+    @Basic
+    @Column(name="updatefilename")
+    public String getUpdatefilename() {
+        return updatefilename;
+    }
+
+    public void setUpdatefilename(String updatefilename) {
+        this.updatefilename = updatefilename;
     }
 
     @Override

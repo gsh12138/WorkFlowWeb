@@ -1,9 +1,6 @@
 package controllers;
 
-import entitys.ExceptionEntity;
-import entitys.ExceptionclazzEntity;
-import entitys.UserEntity;
-import entitys.YcclgroupEntity;
+import entitys.*;
 import helpers.IdMaker;
 import helpers.SaveFilePathHelper;
 import helpers.UserHelper;
@@ -14,12 +11,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import repositorys.mySqlRepositorys.ExceptionClazzRepository;
 import repositorys.mySqlRepositorys.ExceptionRepository;
+import repositorys.mySqlRepositorys.HandlingRepository;
 import repositorys.mySqlRepositorys.YcclgroupRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -29,6 +28,7 @@ public class ExceptionHandlingController {
     private ExceptionClazzRepository clazzRepository;
     private YcclgroupRepository groupRepository;
     private ExceptionRepository repository;
+    private HandlingRepository handlingRepository;
 
 
     @Autowired
@@ -40,6 +40,11 @@ public class ExceptionHandlingController {
     @Autowired
     public void setRepository(ExceptionRepository repository) {
         this.repository = repository;
+    }
+
+    @Autowired
+    public void setHandlingRepository(HandlingRepository handlingRepository) {
+        this.handlingRepository = handlingRepository;
     }
 
     @RequestMapping(value = "launch",method = RequestMethod.GET)
@@ -94,13 +99,8 @@ public class ExceptionHandlingController {
         entity.setCreatdate(today);
         entity.setCreatdep(userEntity.getDepartment());
         entity.setCreater(userEntity.getUserid());
-        if(file!=null){
-            File newfile = new File(SaveFilePathHelper.getSavePath()+"/"+file.getOriginalFilename());
-            try {
-                file.transferTo(newfile);
-                entity.setUpdatefile(newfile.getPath());
-                entity.setUpdatefilename(file.getOriginalFilename());
-            }catch (Exception ex){
+        if(!file.getOriginalFilename().equals("")){
+            if(!saveFile(file,entity)){
                 return "err500";
             }
         }
@@ -111,6 +111,75 @@ public class ExceptionHandlingController {
 
         return "home";
     }
+
+    @RequestMapping(value = "exception/{bid}",method = RequestMethod.GET)
+    public String detile(@PathVariable String bid,@RequestParam(required = false) Integer hid,Model model){
+        ExceptionEntity entity = repository.findByBid(bid);
+        List<HandlingEntity> handlingEntityList = new ArrayList<HandlingEntity>();
+        handlingEntityList = handlingRepository.findByBid(bid);
+
+        model.addAttribute("detile",entity);
+        model.addAttribute("handlingList",handlingEntityList);
+        if(hid!=null){
+            HandlingEntity currHandling=null;
+            for (HandlingEntity handlingEntity:handlingEntityList
+                 ) {
+                if(handlingEntity.getId()==hid){
+                    currHandling=handlingEntity;
+                    model.addAttribute("currhandling",currHandling);
+                    model.addAttribute("currhandlingid",hid);
+                    break;
+                }
+            }
+        }
+
+        return "exception";
+    }
+
+    @RequestMapping(value = "exception/{bid}", method=RequestMethod.POST)
+    public String handlingException(@RequestParam(value = "file",required = false) MultipartFile file,
+            @PathVariable String bid,HttpServletRequest request){
+        Date today = new Date(System.currentTimeMillis());
+        UserEntity userEntity = UserHelper.currentUser();
+        if(userEntity==null){
+            return "login";
+        }
+        String reason = request.getParameter("reason");
+        String result = request.getParameter("result");
+        String keyword = request.getParameter("keyword");
+        HandlingEntity handlingEntity = new HandlingEntity();
+        handlingEntity.setBid(bid);
+        handlingEntity.setFinishdate(today);
+        handlingEntity.setHandler(userEntity.getUserid());
+        handlingEntity.setReason(reason);
+        handlingEntity.setResult(result);
+        handlingEntity.setKeyword(keyword);
+        if(!file.getOriginalFilename().equals("")){
+            if(!saveFile(file,handlingEntity)){
+                return "err500";
+            }
+        }
+        handlingRepository.save(handlingEntity);
+        return "home";
+
+    }
+
+    private boolean saveFile(MultipartFile file,HaveUpdateFileEntity entity){
+
+        File newfile = new File(SaveFilePathHelper.getSavePath()+"/"+file.getOriginalFilename());
+          try {
+                file.transferTo(newfile);
+                entity.setUpdatefile(newfile.getPath());
+                entity.setUpdatefilename(file.getOriginalFilename());
+                return true;
+            }catch (Exception ex){
+                return false;
+            }
+
+
+    }
+
+
 
 
 

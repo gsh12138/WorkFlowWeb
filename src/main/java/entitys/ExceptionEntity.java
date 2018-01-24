@@ -11,7 +11,7 @@ import java.sql.Date;
  */
 @Entity
 @Table(name = "exception", schema = "oasystemdev", catalog = "")
-public class ExceptionEntity {
+public class ExceptionEntity implements HaveUpdateFileEntity {
     private int id;
     private String bid;
     private Date creatdate;
