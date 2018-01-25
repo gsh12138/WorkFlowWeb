@@ -11,5 +11,5 @@ import java.util.List;
  */
 @Repository
 public interface HandlingRepository extends CrudRepository<HandlingEntity,Integer> {
-    List<HandlingEntity> findByBid(String bid);
+    List<HandlingEntity> findByBidOrderById(String bid);
 }

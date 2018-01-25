@@ -8,9 +8,10 @@ import java.util.List;
 public interface FlowDateInterface {
 
     FullFlow findFullFlow(String flowId);
-    List<? extends FlowTemplates> findFlowTemplates(String flowClazzID);
+    List<FlowTemplates> findFlowTemplates(String flowClazzID);
     int insertFullFlow(FullFlow fullFlow);
     int updateFullFlow(FullFlow fullFlow);
-    List<? extends FlowDetail> creatDetail(MainFlow flow);
+    List<FlowDetail> creatDetail(MainFlow flow);
+    FullFlow findFullFlowByBid(String bid);
 
 }

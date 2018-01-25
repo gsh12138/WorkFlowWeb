@@ -1,6 +1,11 @@
 package controllers;
 
+import Flow.FlowDateInterface;
+import Flow.FlowDetail;
+import Flow.FlowState;
+import Flow.FullFlow;
 import entitys.*;
+import helpers.FullFlowProcessorImp;
 import helpers.IdMaker;
 import helpers.SaveFilePathHelper;
 import helpers.UserHelper;
@@ -9,16 +14,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import repositorys.mySqlRepositorys.ExceptionClazzRepository;
-import repositorys.mySqlRepositorys.ExceptionRepository;
-import repositorys.mySqlRepositorys.HandlingRepository;
-import repositorys.mySqlRepositorys.YcclgroupRepository;
+import repositorys.mySqlRepositorys.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.lang.reflect.Array;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -27,8 +32,12 @@ public class ExceptionHandlingController {
 
     private ExceptionClazzRepository clazzRepository;
     private YcclgroupRepository groupRepository;
+    private YcclgroupmemberRepository groupmemberRepository;
     private ExceptionRepository repository;
     private HandlingRepository handlingRepository;
+    private FlowDateInterface flowDate;
+    private MainFlowRepository mainFlowRepository;
+    private UserRespository userRespository;
 
 
     @Autowired
@@ -45,6 +54,26 @@ public class ExceptionHandlingController {
     @Autowired
     public void setHandlingRepository(HandlingRepository handlingRepository) {
         this.handlingRepository = handlingRepository;
+    }
+
+    @Autowired
+    public void setFlowDate(FlowDateInterface flowDate) {
+        this.flowDate = flowDate;
+    }
+
+    @Autowired
+    public void setMainFlowRepository(MainFlowRepository mainFlowRepository) {
+        this.mainFlowRepository = mainFlowRepository;
+    }
+
+    @Autowired
+    public void setGroupmemberRepository(YcclgroupmemberRepository groupmemberRepository) {
+        this.groupmemberRepository = groupmemberRepository;
+    }
+
+    @Autowired
+    public void setUserRespository(UserRespository userRespository) {
+        this.userRespository = userRespository;
     }
 
     @RequestMapping(value = "launch",method = RequestMethod.GET)
@@ -105,6 +134,11 @@ public class ExceptionHandlingController {
             }
         }
 
+
+        FullFlow flow = FullFlowProcessorImp.buildNoTemplateFlow(entity.getBid(),entity.getCreater(),groupEntity.getCharger(),"yycl");
+
+        flowDate.insertFullFlow(flow);
+
         repository.save(entity);
 
 
@@ -114,23 +148,63 @@ public class ExceptionHandlingController {
 
     @RequestMapping(value = "exception/{bid}",method = RequestMethod.GET)
     public String detile(@PathVariable String bid,@RequestParam(required = false) Integer hid,Model model){
+        UserEntity userEntity = UserHelper.currentUser();
+        if(userEntity==null){
+            return "login";
+        }
+        FullFlow flow = flowDate.findFullFlowByBid(bid);
         ExceptionEntity entity = repository.findByBid(bid);
-        List<HandlingEntity> handlingEntityList = new ArrayList<HandlingEntity>();
-        handlingEntityList = handlingRepository.findByBid(bid);
+        List<YcclgroupmemberEntity> ycclgroupmemberEntityList =
+                groupmemberRepository.findAllByGroupid(entity.getHandleteam());
+        String createrName = userRespository.findByUserid(entity.getCreater()).getName();
+        String groupName = groupRepository.findByGroupid(entity.getHandleteam()).getGroupname();
+        entity.setCreater(createrName);
+        entity.setHandleteam(groupName);
 
+        List<HandlingEntity> handlingEntityList = new ArrayList<HandlingEntity>();
+        handlingEntityList = handlingRepository.findByBidOrderById(bid);
+        for (HandlingEntity handlingEntity:handlingEntityList
+             ) {
+            String handlerName = userRespository.findByUserid(handlingEntity.getHandler()).getName();
+            handlingEntity.setHandler(handlerName);
+        }
+        List<HandlingEntity> dechandlingList=new ArrayList<HandlingEntity>(handlingEntityList);
+        if(flow.getHandlingStep().getFlowStepNumber()==2){
+            model.addAttribute("members",ycclgroupmemberEntityList);
+        }
         model.addAttribute("detile",entity);
+        model.addAttribute("flow",flow);
         model.addAttribute("handlingList",handlingEntityList);
+        if(handlingEntityList.size()==0||flow.getFlow().getState()==FlowState.REPULED){
+            model.addAttribute("currstep",0);
+        }else {
+            Collections.sort(dechandlingList);
+            model.addAttribute("currstep",dechandlingList.get(0).getId());
+        }
         if(hid!=null){
             HandlingEntity currHandling=null;
             for (HandlingEntity handlingEntity:handlingEntityList
                  ) {
                 if(handlingEntity.getId()==hid){
                     currHandling=handlingEntity;
+                    for (FlowDetail detail:flow.getFlowDetail()
+                         ) {
+                        if(detail.getFlowStepNumber()==currHandling.getHandstep()+1){
+                            if(detail.getHandResult()!=null&&detail.getHandResult().equals(FlowState.REPULED.toString())){
+                                model.addAttribute("returnreson",detail.getHandcontent());
+                                break;
+                            }
+                        }
+                    }
                     model.addAttribute("currhandling",currHandling);
                     model.addAttribute("currhandlingid",hid);
                     break;
                 }
             }
+        }
+        if(flow.getFlow().getState()==FlowState.CLOSE||
+                flow.getFlow().getHanding().equals(userEntity.getUserid())){
+            return "exceptionReadOnly";
         }
 
         return "exception";
@@ -144,6 +218,10 @@ public class ExceptionHandlingController {
         if(userEntity==null){
             return "login";
         }
+        FullFlow flow = flowDate.findFullFlowByBid(bid);
+        if(!flow.getHandlingStep().getHandller().equals(userEntity.getUserid())){
+            return "login";
+        }
         String reason = request.getParameter("reason");
         String result = request.getParameter("result");
         String keyword = request.getParameter("keyword");
@@ -154,14 +232,105 @@ public class ExceptionHandlingController {
         handlingEntity.setReason(reason);
         handlingEntity.setResult(result);
         handlingEntity.setKeyword(keyword);
+        handlingEntity.setHandstep(flow.getFlow().getFlowStepNumber());
         if(!file.getOriginalFilename().equals("")){
             if(!saveFile(file,handlingEntity)){
                 return "err500";
             }
         }
+
+        flow.getFlow().setState(FlowState.RETREATED);
+        flow.getFlow().setHanding(flow.getFlow().getStarter());
+        flow.getFlow().setFlowStepNumber(flow.getHandlingStep().getFlowStepNumber()+1);
+        flow.getHandlingStep().setHandDate(new java.util.Date());
+
+
+        FlowDetailEntity flowDetail = new FlowDetailEntity();
+        flowDetail.setHandller(flow.getFlow().getStarter());
+        flowDetail.setFlowStepNumber(flow.getFlow().getFlowStepNumber());
+        flowDetail.setFlowId(flow.getFlow().getFlowId());
+        flow.getFlowDetail().add(flowDetail);
         handlingRepository.save(handlingEntity);
+        flowDate.updateFullFlow(flow);
         return "home";
 
+    }
+
+    @RequestMapping(value = "sethandler/{bid}",method = RequestMethod.POST)
+    public String setupHandler(@PathVariable String bid,HttpServletRequest request){
+        UserEntity userEntity = UserHelper.currentUser();
+        if(userEntity==null){
+            return "login";
+        }
+        String handler = request.getParameter("handler").split("-")[0];
+        FullFlow flow = flowDate.findFullFlowByBid(bid);
+        if(!flow.getHandlingStep().getHandller().equals(userEntity.getUserid())){
+            return "login";
+        }
+        flow.getFlow().setHanding(handler);
+        flow.getFlow().setFlowStepNumber(flow.getHandlingStep().getFlowStepNumber()+1);
+        flow.getHandlingStep().setHandDate(new java.util.Date());
+        flow.getFlow().setState(FlowState.PASS);
+
+        FlowDetailEntity detailEntity = new FlowDetailEntity();
+        detailEntity.setFlowId(flow.getFlow().getFlowId());
+        detailEntity.setFlowStepNumber(flow.getFlow().getFlowStepNumber());
+        detailEntity.setHandller(handler);
+        flow.getFlowDetail().add(detailEntity);
+        flowDate.updateFullFlow(flow);
+        return "home";
+
+    }
+
+    @RequestMapping(value = "returnException/{bid}",method = RequestMethod.POST)
+    public String returnedException(@PathVariable String bid,HttpServletRequest request){
+        UserEntity userEntity = UserHelper.currentUser();
+        if(userEntity==null){
+            return "login";
+        }
+        ExceptionEntity exceptionEntity = repository.findByBid(bid);
+        if(!exceptionEntity.getCreater().equals(userEntity.getUserid())){
+            return "login";
+        }
+        String returnReason = request.getParameter("returnreason");
+        if(returnReason==null){
+            //TODO
+        }
+        FullFlow flow = flowDate.findFullFlowByBid(bid);
+        flow.getFlow().setState(FlowState.REPULED);
+        flow.getFlow().setFlowStepNumber(flow.getHandlingStep().getFlowStepNumber()+1);
+        flow.getFlow().setHanding(flow.getLastSetp().getHandller());
+        flow.getHandlingStep().setHandDate(new java.util.Date());
+        flow.getHandlingStep().setHandcontent(returnReason);
+        flow.getHandlingStep().setHandResult(FlowState.REPULED.toString());
+
+        FlowDetailEntity flowDetail = new FlowDetailEntity();
+        flowDetail.setFlowId(flow.getFlow().getFlowId());
+        flowDetail.setFlowStepNumber(flow.getFlow().getFlowStepNumber());
+        flowDetail.setHandller(flow.getFlow().getHanding());
+
+        flow.getFlowDetail().add(flowDetail);
+        flowDate.updateFullFlow(flow);
+        return "home";
+
+    }
+
+    @RequestMapping(value = "closeException/{bid}",method = RequestMethod.GET)
+    public String closeExcetpion(@PathVariable String bid){
+        UserEntity userEntity = UserHelper.currentUser();
+        if(userEntity==null){
+            return "login";
+        }
+        ExceptionEntity exceptionEntity = repository.findByBid(bid);
+        if(!exceptionEntity.getCreater().equals(userEntity.getUserid())){
+            return "login";
+        }
+        FullFlow flow = flowDate.findFullFlowByBid(bid);
+        flow.getFlow().setState(FlowState.CLOSE);
+        flow.getHandlingStep().setHandDate(new java.util.Date());
+        flow.getHandlingStep().setHandResult(FlowState.CLOSE.toString());
+        flowDate.updateFullFlow(flow);
+        return "home";
     }
 
     private boolean saveFile(MultipartFile file,HaveUpdateFileEntity entity){
@@ -181,6 +350,6 @@ public class ExceptionHandlingController {
 
 
 
-
-
 }
+
+

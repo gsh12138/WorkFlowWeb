@@ -39,11 +39,22 @@ public class FlowDateImp implements FlowDateInterface {
 
         MainFlowEntity flow = mainFlowRepository.findByFlowId(flowId);
         List<FlowDetailEntity> flowDetails = detailRepository.findByFlowId(flowId);
-        return new FullFlowImp(flow,flowDetails);
+        List<FlowDetail> flowDetailList = new ArrayList<FlowDetail>(flowDetails);
+        return new FullFlowImp(flow,flowDetailList);
     }
 
-    public List<FlowTemplatesEntity> findFlowTemplates(String flowClazzID) {
-        return templatesRepository.findByFormClazzId(flowClazzID);
+    public FullFlow findFullFlowByBid(String bid) {
+
+        MainFlowEntity flow = mainFlowRepository.findByBid(bid);
+        List<FlowDetailEntity> flowDetails = detailRepository.findByFlowId(flow.getFlowId());
+        List<FlowDetail> flowDetailList = new ArrayList<FlowDetail>(flowDetails);
+        return new FullFlowImp(flow,flowDetailList);
+    }
+
+    public List<FlowTemplates> findFlowTemplates(String flowClazzID) {
+        List<FlowTemplates> templates = new ArrayList<FlowTemplates>(
+                templatesRepository.findByFormClazzId(flowClazzID));
+        return templates;
     }
 
     public int insertFullFlow(FullFlow fullFlow) {
@@ -65,9 +76,9 @@ public class FlowDateImp implements FlowDateInterface {
         return 0;
     }
 
-    public List<FlowDetailEntity> creatDetail(MainFlow flow) {
-        List<FlowTemplatesEntity> templatesEntities = this.findFlowTemplates(flow.getFlowClazzId());
-        List<FlowDetailEntity> flowDetailEntities = new ArrayList<FlowDetailEntity>();
+    public List<FlowDetail> creatDetail(MainFlow flow) {
+        List<FlowTemplates> templatesEntities = this.findFlowTemplates(flow.getFlowClazzId());
+        List<FlowDetail> flowDetailEntities = new ArrayList<FlowDetail>();
         FlowDetailEntity fristStep = new FlowDetailEntity();
         fristStep.setFlowId(flow.getFlowId());
         fristStep.setFlowStepNumber(1);
@@ -75,7 +86,7 @@ public class FlowDateImp implements FlowDateInterface {
         fristStep.setHandller(flow.getStarter());
         flowDetailEntities.add(fristStep);
 
-        for (FlowTemplatesEntity template:templatesEntities
+        for (FlowTemplates template:templatesEntities
              ) {
             FlowDetailEntity flowDetailEntity = new FlowDetailEntity();
             flowDetailEntity.setFlowId(flow.getFlowId());

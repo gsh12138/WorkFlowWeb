@@ -29,6 +29,8 @@ public class FlowDetailEntity implements FlowDetail, Comparable<FlowDetailEntity
     private Date handDate;
     @Column(name = "handresult")
     private String handResult;
+    @Column(name="handcontent")
+    private String handcontent;
 
     public FlowDetailEntity() {
     }
@@ -71,6 +73,14 @@ public class FlowDetailEntity implements FlowDetail, Comparable<FlowDetailEntity
 
     public void setHandResult(String handResult) {
         this.handResult = handResult;
+    }
+
+    public String getHandcontent() {
+        return handcontent;
+    }
+
+    public void setHandcontent(String handcontent) {
+        this.handcontent = handcontent;
     }
 
     @Override

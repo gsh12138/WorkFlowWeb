@@ -7,7 +7,7 @@ import java.util.List;
  */
 public interface FullFlow {
     MainFlow getFlow();
-    List<? extends FlowDetail> getFlowDetail();
+    List<FlowDetail> getFlowDetail();
     FlowDetail getHandlingStep();
     FlowDetail getNextStep();
     FlowDetail getLastSetp();

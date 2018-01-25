@@ -95,4 +95,9 @@ public class HomeController {
     public String login(){
         return "login";
     }
+
+    @RequestMapping(value = "skin-config",method = RequestMethod.GET)
+    public String skinconfig(){
+        return "skin-config";
+    }
 }

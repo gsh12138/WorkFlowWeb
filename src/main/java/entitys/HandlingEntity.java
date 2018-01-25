@@ -11,7 +11,7 @@ import java.sql.Date;
  */
 @Entity
 @Table(name = "handling", schema = "oasystemdev", catalog = "")
-public class HandlingEntity implements HaveUpdateFileEntity {
+public class HandlingEntity implements HaveUpdateFileEntity,Comparable<HandlingEntity> {
     private int id;
     private String bid;
     private String keyword;
@@ -21,6 +21,7 @@ public class HandlingEntity implements HaveUpdateFileEntity {
     private String handler;
     private String updatefile;
     private String updatefilename;
+    private int handstep;
 
     @Id
     @Column(name = "id")
@@ -112,6 +113,16 @@ public class HandlingEntity implements HaveUpdateFileEntity {
         this.updatefilename = updatefilename;
     }
 
+    @Basic
+    @Column(name = "handstep")
+    public int getHandstep() {
+        return handstep;
+    }
+
+    public void setHandstep(int handstep) {
+        this.handstep = handstep;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -144,5 +155,12 @@ public class HandlingEntity implements HaveUpdateFileEntity {
                 .append(handler)
                 .append(updatefile)
                 .toHashCode();
+    }
+
+
+
+    public int compareTo(HandlingEntity o) {
+
+        return o.getId()-this.id;
     }
 }

@@ -67,8 +67,8 @@ public class IdMaker {
         List<ExceptionEntity> exceptionEntities = exceptionRepository.findMax(today);
         if(exceptionEntities.size()!=0){
             String id = exceptionEntities.get(0).getBid();
-            int tt = Integer.valueOf(id)+1;
-            return String.format(id);
+            int temp = Integer.valueOf(id.substring(8))+1;
+            return temid+String.format("%03d",temp);
         }
         else {
             return temid+"001";

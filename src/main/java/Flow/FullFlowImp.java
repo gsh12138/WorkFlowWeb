@@ -8,12 +8,12 @@ import java.util.List;
 public class FullFlowImp implements FullFlow {
 
     private MainFlow flow;
-    private List<? extends FlowDetail> flowDetail;
+    private List<FlowDetail> flowDetail;
     private FlowDetail handlingStep;
     private FlowDetail nextStep;
     private FlowDetail lastSetp;
 
-    public FullFlowImp(MainFlow flow, List<? extends FlowDetail> flowDetail) {
+    public FullFlowImp(MainFlow flow, List<FlowDetail> flowDetail) {
         this.flow = flow;
         this.flowDetail = flowDetail;
         this.nextStep=findNextStep();
@@ -25,7 +25,7 @@ public class FullFlowImp implements FullFlow {
         return flow;
     }
 
-    public List<? extends FlowDetail> getFlowDetail() {
+    public List<FlowDetail> getFlowDetail() {
         return flowDetail;
     }
 

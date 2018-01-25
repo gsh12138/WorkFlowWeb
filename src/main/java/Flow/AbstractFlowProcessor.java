@@ -37,7 +37,8 @@ public abstract class AbstractFlowProcessor implements FlowProcessor {
         }
         FlowDetail handlingStep = fullFlow.getHandlingStep();
         handlingStep.setHandDate(new Date());
-        handlingStep.setHandResult(result);
+        handlingStep.setHandcontent(result);
+        handlingStep.setHandResult(FlowState.PASS.toString());
         if(fullFlow.getNextStep()==null){
             fullFlow.getFlow().setState(FlowState.PASS);
             return fullFlow;
@@ -55,7 +56,8 @@ public abstract class AbstractFlowProcessor implements FlowProcessor {
         }
         FlowDetail handlingSetp = fullFlow.getHandlingStep();
         handlingSetp.setHandDate(new Date());
-        handlingSetp.setHandResult(result);
+        handlingSetp.setHandcontent(result);
+        handlingSetp.setHandResult(FlowState.REPULED.toString());
         fullFlow.getFlow().setState(FlowState.REPULED);
         return fullFlow;
     }
@@ -67,7 +69,8 @@ public abstract class AbstractFlowProcessor implements FlowProcessor {
         }
         FlowDetail handlingSetp = fullFlow.getHandlingStep();
         handlingSetp.setHandDate(new Date());
-        handlingSetp.setHandResult(result);
+        handlingSetp.setHandcontent(result);
+        handlingSetp.setHandResult(FlowState.RETREATED.toString());
         fullFlow.getFlow().setState(FlowState.RETREATED);
         FlowDetail lastSetp = fullFlow.getLastSetp();
         fullFlow.getFlow().setFlowStepNumber(lastSetp.getFlowStepNumber());

@@ -15,6 +15,8 @@ public interface FlowDetail {
     String getHandResult();
     void setHandResult(String result);
     void setHandDate(Date handDate);
+    void setHandcontent(String content);
+    String getHandcontent();
 
 
 }
