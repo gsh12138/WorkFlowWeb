@@ -12,19 +12,19 @@ import helpers.UserHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import repositorys.mySqlRepositorys.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.lang.reflect.Array;
+import java.io.File;
+import java.io.IOException;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/exceptionHandle")
@@ -36,9 +36,8 @@ public class ExceptionHandlingController {
     private ExceptionRepository repository;
     private HandlingRepository handlingRepository;
     private FlowDateInterface flowDate;
-    private MainFlowRepository mainFlowRepository;
     private UserRespository userRespository;
-
+    private MainFlowRepository mainFlowRepository;
 
     @Autowired
     public ExceptionHandlingController(ExceptionClazzRepository clazzRepository, YcclgroupRepository groupRepository) {
@@ -61,10 +60,6 @@ public class ExceptionHandlingController {
         this.flowDate = flowDate;
     }
 
-    @Autowired
-    public void setMainFlowRepository(MainFlowRepository mainFlowRepository) {
-        this.mainFlowRepository = mainFlowRepository;
-    }
 
     @Autowired
     public void setGroupmemberRepository(YcclgroupmemberRepository groupmemberRepository) {
@@ -74,6 +69,11 @@ public class ExceptionHandlingController {
     @Autowired
     public void setUserRespository(UserRespository userRespository) {
         this.userRespository = userRespository;
+    }
+
+    @Autowired
+    public void setMainFlowRepository(MainFlowRepository mainFlowRepository) {
+        this.mainFlowRepository = mainFlowRepository;
     }
 
     @RequestMapping(value = "launch",method = RequestMethod.GET)
@@ -203,7 +203,7 @@ public class ExceptionHandlingController {
             }
         }
         if(flow.getFlow().getState()==FlowState.CLOSE||
-                flow.getFlow().getHanding().equals(userEntity.getUserid())){
+                !flow.getFlow().getHanding().equals(userEntity.getUserid())){
             return "exceptionReadOnly";
         }
 
@@ -331,6 +331,55 @@ public class ExceptionHandlingController {
         flow.getHandlingStep().setHandResult(FlowState.CLOSE.toString());
         flowDate.updateFullFlow(flow);
         return "home";
+    }
+
+    @RequestMapping(value = "myException/{state}",method = RequestMethod.GET)
+    public String myException(Model model,@PathVariable String state){
+        UserEntity userEntity = UserHelper.currentUser();
+        if(userEntity==null){
+            return "login";
+        }
+        List<MainFlowEntity> mainFlowEntities=new ArrayList<MainFlowEntity>();
+        if(state.equals("tome")){
+            mainFlowEntities=
+                    mainFlowRepository.findHandling("yycl",userEntity.getUserid());
+        }
+        else if(state.equals("my")){
+            mainFlowEntities =
+                    mainFlowRepository.findFlowByClazzIdAndStarter("yycl",userEntity.getUserid());
+        }
+        else {
+            return "err500";
+        }
+        Collections.sort(mainFlowEntities, new Comparator<MainFlowEntity>() {
+            public int compare(MainFlowEntity o1, MainFlowEntity o2) {
+                if(o1.getState()==FlowState.CLOSE){
+                    return 1;
+                }
+                if(o1.getStartDate().after(o2.getStartDate())){
+                    return -1;
+                }else {
+                    return 1;
+                }
+            }
+        });
+        Map<MainFlowEntity,ExceptionEntity> exceptionEntities = new LinkedHashMap<MainFlowEntity, ExceptionEntity>();
+        for (MainFlowEntity flow:mainFlowEntities
+             ) {
+            ExceptionEntity entity = repository.findByBid(flow.getBid());
+            if(entity!=null){
+                exceptionEntities.put(flow,entity);
+                UserEntity username = userRespository.findByUserid(flow.getStarter());
+                flow.setStarter(username.getName());
+            }
+
+        }
+
+        model.addAttribute("flows",exceptionEntities);
+
+        model.addAttribute("title","我发起的异常");
+        return "exceptionList";
+
     }
 
     private boolean saveFile(MultipartFile file,HaveUpdateFileEntity entity){

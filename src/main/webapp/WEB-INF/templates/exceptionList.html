@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default">
+<head>
+    <title th:text="${title}"></title>
+</head>
+<body>
+<div class="col-lg-10" layout:fragment="pageheader">
+    <h2 th:text="${title}"></h2>
+    <ol class="breadcrumb">
+        <li>
+            <a href="/">首页</a>
+        </li>
+        <li class="active">
+            <strong th:text="${title}"></strong>
+        </li>
+
+    </ol>
+</div>
+<div class="wrapper wrapper-content  animated fadeInRight" layout:fragment="content">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5 th:text="${title}"></h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="m-b-lg">
+                        <div class="input-group">
+                            <input type="text" placeholder="Search issue by name..." class=" form-control">
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-white"> Search</button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="m-t-md">
+
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover issue-tracker">
+                            <tbody>
+
+                            <tr th:each="flow:${flows}">
+                                <td th:switch="${flow.getKey().state.toString()}">
+                                    <span th:case="'RETREATED'" class="label label-info">已处理</span>
+                                    <span th:case="'CLOSE'" class="label label-primary">已关闭</span>
+                                    <span th:case="*" class="label label-warning">处理中</span>
+                                </td>
+                                <td class="issue-info">
+                                    <a th:text="${flow.getValue().bid}"
+                                       th:href="'/exceptionHandle/exception/'+${flow.getValue().bid}">
+                                        ISSUE-23
+                                    </a>
+
+                                    <small th:text="${flow.getValue().theme}">
+                                        This is issue with the coresponding note
+                                    </small>
+                                </td>
+                                <td th:text="'发起人:'+${flow.getKey().starter}">
+                                    Adrian Novak
+                                </td>
+                                <td th:text="${#dates.format(flow.getKey().startDate,'yyyy-MM-dd')}">
+                                    12.02.2015 10:00 am
+                                </td>
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

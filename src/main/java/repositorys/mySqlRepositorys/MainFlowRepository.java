@@ -20,4 +20,10 @@ public interface MainFlowRepository extends CrudRepository<MainFlowEntity,Intege
 
     @Query(value = "SELECT m from MainFlowEntity m where m.flowId like ?1 order by m.flowId desc ")
     List<MainFlowEntity> findMaxid(String did);
+
+    @Query(value = "SELECT m from MainFlowEntity m where m.flowClazzId=?1 and m.starter=?2 order by m.startDate")
+    List<MainFlowEntity> findFlowByClazzIdAndStarter(String clazzid,String starter);
+
+    @Query(value = "SELECT m from MainFlowEntity m where m.flowClazzId=?1 and m.handing=?2 and m.state<>'CLOSE' order by  m.startDate")
+    List<MainFlowEntity> findHandling(String clazzid,String handing);
 }
