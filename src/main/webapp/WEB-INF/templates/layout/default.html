@@ -23,7 +23,7 @@
     <link th:href="@{/resources/css/plugins/sweetalert/sweetalert.css}" rel="stylesheet">
     <title>首页</title>
 </head>
-<body>
+<body class="no-skin-config">
 
 
     <div id="wrapper">
@@ -89,19 +89,7 @@
                         </ul>
                     </li>
 
-                    <li class="landing_link">
-                        <a target="_blank" href="landing.html">
-                            <i class="fa fa-star"></i>
-                            <span class="nav-label">Landing Page</span>
-                            <span class="label label-warning pull-right">NEW</span>
-                        </a>
-                    </li>
-                    <li class="special_link">
-                        <a href="package.html">
-                            <i class="fa fa-database"></i>
-                            <span class="nav-label">Package</span>
-                        </a>
-                    </li>
+
                 </ul>
 
             </div>
@@ -122,7 +110,10 @@
                         <li class="dropdown">
                             <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
                                 <i class="fa fa-bell"></i>
-                                <span class="label label-primary">8</span>
+                                <!--/*@thymesVar id="messageList" type="java.util.List<entitys.MessageEntity>"*/-->
+                                <div th:unless="${messageList.size() eq 0}">
+                                 <span class="label label-primary" th:text="${messageList.size()}">8</span>
+                                </div>
                             </a>
                             <ul class="dropdown-menu dropdown-alerts">
                                 <!--/*@thymesVar id="messageList" type="java.util.List<entitys.MessageEntity>"*/-->
@@ -146,41 +137,7 @@
                                     </a>
                                     <div class="divider"></div>
                                 </li>
-                                <li>
-                                    <a href="mailbox.html">
-                                        <div>
-                                            <i class="fa fa-envelope fa-fw"></i> You have 16 messages
-                                            <span class="pull-right text-muted small">4 minutes ago</span>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="divider"></li>
-                                <li>
-                                    <a href="profile.html">
-                                        <div>
-                                            <i class="fa fa-twitter fa-fw"></i> 3 New Followers
-                                            <span class="pull-right text-muted small">12 minutes ago</span>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="divider"></li>
-                                <li>
-                                    <a href="grid_options.html">
-                                        <div>
-                                            <i class="fa fa-upload fa-fw"></i> Server Rebooted
-                                            <span class="pull-right text-muted small">4 minutes ago</span>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="divider"></li>
-                                <li>
-                                    <div class="text-center link-block">
-                                        <a href="notifications.html">
-                                            <strong>See All Alerts</strong>
-                                            <i class="fa fa-angle-right"></i>
-                                        </a>
-                                    </div>
-                                </li>
+
                             </ul>
                         </li>
 
@@ -206,11 +163,11 @@
 
             <div class="footer">
                 <div class="pull-right">
-                    10GB of
-                    <strong>250GB</strong> Free.
+                    TECHSEM
+                    <strong>OA</strong>
                 </div>
                 <div>
-                    <strong>Copyright</strong> Example Company &copy; 2014-2017
+                    <strong>Create by</strong> shnsg &copy; 2017
                 </div>
             </div>
         </div>
