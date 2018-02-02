@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "message", schema = "oasystemdev")
+@Table(name = "message", schema = "oasystemdev", catalog = "")
 public class MessageEntity {
     private int id;
     private String sender;
@@ -15,6 +15,12 @@ public class MessageEntity {
     private String linkurl;
     private String type;
     private Date senddate;
+    private Boolean isnew;
+    private java.sql.Date readdate;
+
+    public void setSenddate(java.sql.Date senddate) {
+        this.senddate = senddate;
+    }
 
     @Id
     @Column(name = "id")
@@ -135,5 +141,25 @@ public class MessageEntity {
         result = 31 * result + (type != null ? type.hashCode() : 0);
         result = 31 * result + (senddate != null ? senddate.hashCode() : 0);
         return result;
+    }
+
+    @Basic
+    @Column(name = "isnew")
+    public Boolean getIsnew() {
+        return isnew;
+    }
+
+    public void setIsnew(Boolean isnew) {
+        this.isnew = isnew;
+    }
+
+    @Basic
+    @Column(name = "readdate")
+    public java.sql.Date getReaddate() {
+        return readdate;
+    }
+
+    public void setReaddate(java.sql.Date readdate) {
+        this.readdate = readdate;
     }
 }

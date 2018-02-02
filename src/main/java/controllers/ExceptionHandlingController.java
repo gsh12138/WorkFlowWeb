@@ -9,6 +9,8 @@ import helpers.FullFlowProcessorImp;
 import helpers.IdMaker;
 import helpers.SaveFilePathHelper;
 import helpers.UserHelper;
+import message.Message;
+import message.MessageFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -141,7 +143,9 @@ public class ExceptionHandlingController {
 
         repository.save(entity);
 
-
+        Message message = MessageFactory.creatWithLink(userEntity.getUserid(),flow.getFlow().getHanding()
+        ,"新的异常处理","/exceptionHandle/exception/"+entity.getBid());
+        message.send();
 
         return "home";
     }

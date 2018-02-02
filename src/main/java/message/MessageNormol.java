@@ -37,6 +37,7 @@ public class MessageNormol implements Message {
         entity.setContent(text);
         entity.setType(type.toString());
         entity.setSenddate(new Date());
+        entity.setIsnew(true);
         messageRepository.save(entity);
     }
 }

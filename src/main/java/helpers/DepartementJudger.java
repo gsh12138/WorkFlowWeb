@@ -13,7 +13,7 @@ public class DepartementJudger {
     public DepartementJudger(){}
 
     @Autowired
-    public static void setRepository(DepartmentRepository repository) {
+    public void setRepository(DepartmentRepository repository) {
         DepartementJudger.repository = repository;
     }
 

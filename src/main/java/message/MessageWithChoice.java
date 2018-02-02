@@ -43,6 +43,7 @@ public class MessageWithChoice implements Message {
         entity.setRefuseurl(refuseurl);
         entity.setType(type.toString());
         entity.setSenddate(new Date());
+        entity.setIsnew(true);
         messageRepository.save(entity);
     }
 }

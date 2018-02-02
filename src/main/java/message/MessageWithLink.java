@@ -37,6 +37,7 @@ public class MessageWithLink implements Message {
         entity.setLinkurl(link);
         entity.setType(type.toString());
         entity.setSenddate(new Date());
+        entity.setIsnew(true);
         messageRepository.save(entity);
     }
 }

@@ -1,9 +1,11 @@
 package controllers;
 
+import entitys.MessageEntity;
 import entitys.UserEntity;
 import entitys.YcclgroupEntity;
 import entitys.YcclgroupmemberEntity;
 import helpers.DepartementJudger;
+import helpers.UserHelper;
 import message.Message;
 import message.MessageFactory;
 import message.MessageNormol;
@@ -12,10 +14,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import repositorys.mySqlRepositorys.MessageRepository;
 import repositorys.mySqlRepositorys.UserRespository;
 import repositorys.mySqlRepositorys.YcclgroupRepository;
 import repositorys.mySqlRepositorys.YcclgroupmemberRepository;
@@ -34,6 +34,7 @@ public class YcclGroupController {
     private UserRespository userRespository;
     private YcclgroupmemberRepository ycclgroupmemberRepository;
     private static final String ID_PRF="yccl";
+    private MessageRepository messageRepository;
 
 
     @Autowired
@@ -41,6 +42,11 @@ public class YcclGroupController {
         this.repository=repository;
         this.userRespository=userRespository;
         this.ycclgroupmemberRepository = ycclgroupmemberRepository;
+    }
+
+    @Autowired
+    public void setMessageRepository(MessageRepository messageRepository) {
+        this.messageRepository = messageRepository;
     }
 
     @RequestMapping(value = "creat",method = RequestMethod.GET)
@@ -139,7 +145,8 @@ public class YcclGroupController {
             String messageContent = adder.getName()+"想要将你加入"+ycclgroupEntity.getGroupname()+
                     "异常处理小组,你是否同意加入该小组?";
             Message message = MessageFactory.creatWithChoice(
-                    adder.getUserid(),userid,messageContent,"",""
+                    adder.getUserid(),userid,messageContent,"/ycclgroup/agree/"+groupid,
+                    "/ycclgroup/refuse/"+groupid
             );
             message.send();
             return "redirect:/ycclgroup/members/"+groupid;
@@ -213,6 +220,51 @@ public class YcclGroupController {
         else {
             return "login";
         }
+    }
+
+    @RequestMapping(value = "refuse/{groupid}/{messageid}",method = RequestMethod.GET)
+    @ResponseBody
+    public String refuseJoin(@PathVariable String groupid,@PathVariable int messageid){
+        UserEntity userEntity = UserHelper.currentUser();
+        if(userEntity==null){
+            return "login";
+        }
+        MessageEntity messageEntity = messageRepository.findById(messageid);
+        if(!messageEntity.getReceiver().equals(userEntity.getUserid())){
+            return "err500";
+        }
+
+        YcclgroupEntity group = repository.findByGroupid(groupid);
+        Message message = MessageFactory.creatNormol(userEntity.getUserid(),messageEntity.getSender(),
+                userEntity.getName()+"拒绝加入"+group.getGroupname()+"异常处理小组");
+        message.send();
+        return "home";
+
+    }
+
+    @RequestMapping(value = "agree/{groupid}/{messageid}",method = RequestMethod.GET)
+    @ResponseBody
+    public String agreeJoin(@PathVariable String groupid,@PathVariable int messageid){
+        UserEntity userEntity = UserHelper.currentUser();
+        if(userEntity==null){
+            return "login";
+        }
+        MessageEntity messageEntity = messageRepository.findById(messageid);
+        if(!messageEntity.getReceiver().equals(userEntity.getUserid())){
+            return "err500";
+        }
+
+        YcclgroupEntity group = repository.findByGroupid(groupid);
+        YcclgroupmemberEntity member = new YcclgroupmemberEntity();
+        member.setGroupid(groupid);
+        member.setState("1");
+        member.setJoindate(new Date());
+        member.setMembername(userEntity.getName());
+        ycclgroupmemberRepository.save(member);
+        Message message = MessageFactory.creatNormol(userEntity.getUserid(),messageEntity.getSender(),
+                userEntity.getName()+"已加入"+group.getGroupname()+"异常处理小组");
+        message.send();
+        return "home";
     }
 
     private String makeid(){

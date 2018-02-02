@@ -112,7 +112,7 @@
                                 <i class="fa fa-bell"></i>
                                 <!--/*@thymesVar id="messageList" type="java.util.List<entitys.MessageEntity>"*/-->
                                 <div th:unless="${messageList.size() eq 0}">
-                                 <span class="label label-primary" th:text="${messageList.size()}">8</span>
+                                 <span id="listsize" class="label label-primary" th:text="${messageList.size()}">8</span>
                                 </div>
                             </a>
                             <ul class="dropdown-menu dropdown-alerts">
@@ -125,14 +125,15 @@
                                             <i class="fa fa-envelope fa-fw"></i> 新通知消息
                                         </div>
                                     </a>
-                                    <a th:if="${message.getType().equals('WITH_CHOICE')}" href="">
+                                    <a th:id="${message.getId()}" th:if="${message.getType().equals('WITH_CHOICE')}"
+                                    th:onclick="'javascript:withChoiceMessageClick(\''+${message.getId()}+'\',this);'">
                                         <div>
                                             <i class="fa fa-envelope fa-fw"></i> 新邀请
                                         </div>
                                     </a>
-                                    <a th:if="${message.getType().equals('WITH_LINK')}" th:href="${message.getLinkurl()}">
+                                    <a th:if="${message.getType().equals('WITH_LINK')}" th:href="'/message/withLink/'+${message.id}">
                                         <div>
-                                            <i class="fa fa-envelope fa-fw"></i> 新流程
+                                            <i class="fa fa-envelope fa-fw"></i><span th:text="${message.getContent()}"></span>
                                         </div>
                                     </a>
                                     <div class="divider"></div>
@@ -192,6 +193,7 @@
                     type: "success"
                 },function(){
                     $(that).remove();
+                    removeNotice()
                 });
             });
 
@@ -216,12 +218,14 @@
                             $.get('/message/agree/'+messageid,function(){
                                 swal("成功!", "你已经同意!", "success");
                                 $(that).remove();
+                                removeNotice()
                             });
 
                         } else {
                             $.get('message/refuse/'+messageid,function() {
                                 swal("成功!", "你已经拒绝!", "error");
                                 $(that).remove();
+                                removeNotice()
                             })
                         }
                     });
