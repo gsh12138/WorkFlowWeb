@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="/layout/default">
+<head>
+    <link th:href="@{/resources/css/plugins/summernote/summernote.css}" rel="stylesheet">
+    <link th:href="@{/resources/css/plugins/summernote/summernote-bs3.css}" rel="stylesheet">
+    <link th:href="@{/resources/css/plugins/jasny/jasny-bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/resources/css/plugins/codemirror/codemirror.css}" rel="stylesheet">
+    <link th:href="@{/resources/css/plugins/codemirror/ambiance.css}" rel="stylesheet">
+    <title>TECHSEM OA | 知识分享</title>
+</head>
+<body>
+<div class="col-lg-10" layout:fragment="pageheader">
+    <h2>首页</h2>
+    <ol class="breadcrumb">
+        <li>
+            <a href="/">首页</a>
+        </li>
+        <li class="active">
+            <strong>知识分享</strong>
+        </li>
+
+    </ol>
+</div>
+<div class="gray-bg"  layout:fragment="content">
+    <div class="fh-breadcrumb">
+        <div class="fh-column">
+            <div class="full-height-scroll">
+                <ul class="list-group elements-list">
+                    <li th:class="${currhandlingid}?'list-group-item':'list-group-item  active'">
+                        <a th:href="'/knowledge/'+${detile.bid}">
+                            <small th:text="${detile.submitdate}" class="pull-right text-muted"> 16.02.2015</small>
+                            <strong th:text="${detile.submiter}">Ann Smith</strong>
+                            <div class="small m-t-xs">
+                                <p th:text="${detile.zt}">
+                                    Survived not only five centuries, but also the leap scrambled it to make.
+                                </p>
+
+                            </div>
+                        </a>
+                    </li>
+                    <li th:each="handling:${handlingList}"
+                        th:class="${currhandlingid==handling.id}?'list-group-item active':'list-group-item'">
+                        <a th:href="'/knowledge/'+${handling.bid}+'?hid='+${handling.id}">
+                            <small th:text="${handling.submitdate}" class="pull-right text-muted"> 16.02.2015</small>
+                            <strong th:text="${handling.submiter}">Ann Smith</strong>
+                            <div class="small m-t-xs">
+                                <p th:text="${handling.zt}">
+                                    Survived not only five centuries, but also the leap scrambled it to make.
+                                </p>
+                                <p class="m-b-none">
+
+                                </p>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="full-height">
+            <div class="full-height-scroll white-bg border-left">
+                <div class="element-detail-box">
+                    <div class="tab-content">
+                        <div th:unless="${currhandling}" class="tab-pane active">
+                            <div class="small text-muted">
+                                <i class="fa fa-clock-o"></i> <span th:text="${detile.happendate}"></span>
+                            </div>
+                            <div>
+                                <h1 th:text="'主题:'+' '+${detile.zt}"></h1>
+                                <p th:text="'发生日期: '+${detile.happendate}"></p>
+                                <p>填报人: <span style="color: lightseagreen;" th:text="${detile.submiter}"></span></p>
+                                <h4 th:text="'异常描述'"></h4>
+                                <p th:utext="${detile.ycms}"></p>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-title">
+                                            <h5>添加内容</h5>
+                                            <div class="ibox-tools">
+                                                <a class="collapse-link">
+                                                    <i class="fa fa-chevron-up"></i>
+                                                </a>
+                                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                                    <i class="fa fa-wrench"></i>
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-user">
+                                                    <li>
+                                                        <a href="#">Config option 1</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">Config option 2</a>
+                                                    </li>
+                                                </ul>
+                                                <a class="close-link">
+                                                    <i class="fa fa-times"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="ibox-content">
+                                            <form th:action="'/knowledge/handing/'+${detile.bid}" method="post" class="form-horizontal" enctype="multipart/form-data">
+                                                <div class="form-group">
+                                                    <label for="zt" class="col-sm-2 control-label">主题</label>
+                                                    <div class="col-sm-10">
+                                                        <input id="zt" name="zt" type="text" class="form-control"/>
+                                                    </div>
+                                                </div>
+                                                <div class="hr-line-dashed"></div>
+                                                <div class="form-group">
+                                                    <label for="content" class="col-sm-2 control-label">内容</label>
+                                                    <div class="col-sm-10">
+                                                        <textarea class="summernote" name="content" id="content"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="hr-line-dashed"></div>
+                                                <div class="form-group">
+                                                    <div class="col-sm-4 col-sm-offset-8">
+                                                        <button class="btn btn-primary btn-w-m" type="submit">提交</button>
+                                                    </div>
+
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:if="${currhandling}" class="tab-pane active">
+                            <div class="small text-muted">
+                                <i class="fa fa-clock-o"></i> <span th:text="${currhandling.submitdate}"></span>
+                            </div>
+                            <div>
+                                <h1 th:text="'主题:'+' '+${currhandling.zt}"></h1>
+                                <p>提交人: <span th:text="${currhandling.submiter}" style="color: lightseagreen;"></span></p>
+                                <h4 th:text="'内容'"></h4>
+                                <p th:utext="${currhandling.content}"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div layout:fragment="addjs">
+    <script th:src="@{/resources/js/plugins/datapicker/bootstrap-datepicker.js}"></script>
+    <script th:src="@{/resources/js/plugins/summernote/summernote.min.js}"></script>
+    <script th:src="@{/resources/js/plugins/summernote/summernote-zh-CN.js}"></script>
+    <script th:src="@{/resources/js/plugins/datapicker/bootstrap-datepicker.zh-CN.js}"></script>
+    <script th:src="@{/resources/js/plugins/jasny/jasny-bootstrap.min.js}"></script>
+</div>
+
+<script layout:fragment="script">
+
+
+    $('.summernote').summernote({
+        toolbar:[
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']]
+        ],
+        height:300,
+        minHeight: null,
+        maxHeight: null,
+        lang: 'zh-CN'
+    });
+</script>
+
+</body>
+</html>

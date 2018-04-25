@@ -1,5 +1,8 @@
 package helpers;
 
+import entitys.HaveUpdateFileEntity;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
@@ -10,6 +13,22 @@ import java.util.Date;
 public class SaveFilePathHelper {
 
     private static String beacePath="E:/OAFiles";
+
+
+    public static boolean saveFile(MultipartFile file, HaveUpdateFileEntity entity){
+
+        File newfile = new File(SaveFilePathHelper.getSavePath()+"/"+file.getOriginalFilename());
+        try {
+            file.transferTo(newfile);
+            entity.setUpdatefile(newfile.getPath());
+            entity.setUpdatefilename(file.getOriginalFilename());
+            return true;
+        }catch (Exception ex){
+            return false;
+        }
+
+
+    }
 
     public static String getSavePath(){
         Date today = new Date();

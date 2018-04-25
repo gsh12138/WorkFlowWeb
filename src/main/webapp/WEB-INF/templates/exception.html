@@ -58,7 +58,6 @@
                                     <span th:if="${flow.getFlow().getState().toString() eq 'CLOSE'}">最终解决</span>
                                     <span th:unless="${flow.getFlow().getState().toString() eq 'CLOSE'}">当前步骤</span>
                                 </span>
-
                                 <i class="fa fa-map-marker"></i> <span th:text="${detile.handleteam}"></span>
                             </p>
                         </div>
@@ -111,7 +110,6 @@
                                             <div class="file-name">
                                                 <a th:href="'/exceptionHandle/downloadfile/'+${detile.bid}"
                                                     th:text="${detile.updatefilename}"></a>
-
                                             </div>
                                         </a>
                                     </div>
@@ -119,7 +117,6 @@
                                 <div class="clearfix"></div>
                             </div>
                         </div>
-
                         <div class="m-t-lg" th:if="${flow.getHandlingStep().getFlowStepNumber() eq 2}">
                             <div class="hr-line-dashed"></div>
                             <form th:action="'/exceptionHandle/sethandler/'+${detile.bid}" method="post" class="form-horizontal">
@@ -207,7 +204,6 @@
                                             <div class="form-group">
                                                 <div class="col-sm-4 col-sm-offset-8">
                                                     <button class="btn btn-primary btn-w-m" type="submit">提交</button>
-
                                                 </div>
 
                                             </div>
@@ -305,8 +301,6 @@
                                                     <a th:href="'/exceptionHandle/closeException/'+${detile.bid}" class="btn btn-primary btn-w-m" type="submit">关闭</a>
                                                     <button class="btn btn-danger btn-w-m" type="submit">打回</button>
                                                 </div>
-
-
                                             </div>
                                         </form>
                                     </div>

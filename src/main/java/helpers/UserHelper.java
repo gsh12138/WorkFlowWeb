@@ -27,4 +27,12 @@ public class UserHelper {
             return null;
         }
     }
+
+    public static String getUserName(String userid){
+        UserEntity user = respository.findByUserid(userid);
+        if(user!=null){
+            return user.getName();
+        }
+        return null;
+    }
 }

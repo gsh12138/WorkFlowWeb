@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="/layout/default">
+<head>
+    <meta charset="UTF-8"/>
+    <title>TECHSEM OA | 知识分享</title>
+    <link th:href="@{/resources/css/plugins/datapicker/datepicker3.css}" rel="stylesheet">
+    <link th:href="@{/resources/css/plugins/summernote/summernote.css}" rel="stylesheet">
+    <link th:href="@{/resources/css/plugins/summernote/summernote-bs3.css}" rel="stylesheet">
+    <link th:href="@{/resources/css/plugins/jasny/jasny-bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/resources/css/plugins/chosen/bootstrap-chosen.css}" rel="stylesheet">
+</head>
+<body>
+<div class="col-lg-10" layout:fragment="pageheader">
+    <h2>知识分享</h2>
+    <ol class="breadcrumb">
+        <li class="active">
+            <a href="/">知识分享</a>
+        </li>
+
+    </ol>
+</div>
+<div class="wrapper wrapper-content" layout:fragment="content">
+    <div class="row animated fadeInRight">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>提交知识</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li>
+                                <a href="#">Config option 1</a>
+                            </li>
+                            <li>
+                                <a href="#">Config option 2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <form action="" method="post" class="form-horizontal" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="happendate" class="control-label col-sm-2">发生日期</label>
+                            <div class="col-sm-5">
+                                <div class="input-group date datapicker">
+                                    <input data-date-end-date="0d" id="happendate" name="happendate" type="text" class="form-control"/>
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="xgbm" class="control-label col-sm-2">相关部门</label>
+                            <div class="col-sm-10">
+                                <select id="xgbm" name="xgbmuse" data-placeholder="请选择部门..." class="chosen-select" multiple style="width:350px;">
+                                    <option value="JHB">计划部</option>
+                                    <option value="ZZB">制造部</option>
+                                    <option value="XXZX">信息中心</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="ycfl" class="control-label col-sm-2">异常分类</label>
+                            <div class="col-sm-6">
+                                <select class="form-control" name="ycfl" id="ycfl">
+                                    <option>option 1</option>
+                                    <option>option 2</option>
+                                    <option>option 3</option>
+                                    <option>option 4</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="zt" class="control-label col-sm-2">主题</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="zt" name="zt" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="gjc" class="control-label col-sm-2">关键词</label>
+                            <div class="col-sm-6">
+                                <select class="form-control" name="gjc" id="gjc">
+                                    <option>option 1</option>
+                                    <option>option 2</option>
+                                    <option>option 3</option>
+                                    <option>option 4</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cygjc" class="control-label col-sm-2">次要关键词</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="cygjc" name="cygjc" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="tsbm" class="control-label col-sm-2">推送部门</label>
+                            <div class="col-sm-10">
+                                <select id="tsbm" name="tsbmuse" data-placeholder="请选择部门..." class="chosen-select" multiple style="width:350px;">
+                                    <option value="jhb">计划部</option>
+                                    <option value="zzb">制造部</option>
+                                    <option value="xxzx">信息中心</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="ycms" class="control-label col-sm-2">异常描述</label>
+                            <div class="col-sm-10">
+                                <textarea class="summernote" name="ycms" id="ycms"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="file" class="col-sm-2 control-label">上传文件</label>
+                            <div class="col-sm-10">
+                                <div class="fileinput fileinput-new" data-provides="fileinput">
+                                <span class="btn btn-default btn-file">
+                                    <span class="fileinput-new">选择文件</span>
+                                    <span class="fileinput-exists">重选文件</span>
+                                    <input type="file" id="file" name="file">
+                                </span>
+                                    <span class="fileinput-filename"></span>
+                                    <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">&times;</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-8">
+                                <button class="btn btn-primary btn-w-m" type="submit">提交</button>
+                                <a href="/privateProfile" class="btn-w-m btn btn-white">取消</a>
+                            </div>
+
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div layout:fragment="addjs">
+    <script th:src="@{/resources/js/plugins/datapicker/bootstrap-datepicker.js}"></script>
+    <script th:src="@{/resources/js/plugins/summernote/summernote.min.js}"></script>
+    <script th:src="@{/resources/js/plugins/summernote/summernote-zh-CN.js}"></script>
+    <script th:src="@{/resources/js/plugins/datapicker/bootstrap-datepicker.zh-CN.js}"></script>
+    <script th:src="@{/resources/js/plugins/jasny/jasny-bootstrap.min.js}"></script>
+    <script th:src="@{/resources/js/plugins/chosen/chosen.jquery.js}"></script>
+</div>
+<script layout:fragment="script">
+
+
+    $('.datapicker').datepicker({
+        todayBtn:true,
+        autoclose:true,
+        format:'yyyy-mm-dd',
+        language: 'zh-CN'
+
+    });
+    $('.summernote').summernote({
+        toolbar:[
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']]
+        ],
+        height:300,
+        minHeight: null,
+        maxHeight: null,
+        lang: 'zh-CN'
+    });
+    $('.chosen-select').chosen({
+        width:"100%"
+    });
+</script>
+</body>
+</html>
