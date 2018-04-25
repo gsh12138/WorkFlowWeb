@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import repositorys.mySqlRepositorys.KnowledgeHandingRepository;
 import repositorys.mySqlRepositorys.KnowledgeRepository;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +70,23 @@ public class KnowlegeController {
         return "knowledge/submit";
     }
 
+    @RequestMapping(value = "/modify/{bid}",method = RequestMethod.GET)
+    public String modifyGet(@PathVariable String bid,Model model){
+        model.addAttribute("modify",true);
+        return this.detile(bid,null,model);
+    }
+
+    @RequestMapping(value = "/modify/{bid}",method = RequestMethod.POST)
+    public String modifyPost(@PathVariable String bid, HttpServletRequest request){
+        KnowledgeEntity entity = repository.findByBid(bid);
+        String ycms = request.getParameter("ycms");
+        entity.setYcms(ycms);
+        repository.save(entity);
+        return "redirect:/knowledge/"+bid;
+    }
+
+
+
     @RequestMapping(value = "/{bid}", method = RequestMethod.GET)
     public String detile(@PathVariable String bid, @RequestParam(required = false) Integer hid, Model model) {
         UserEntity user = UserHelper.currentUser();
@@ -76,6 +94,9 @@ public class KnowlegeController {
             return "login";
         }
         KnowledgeEntity entity = repository.findByBid(bid);
+        if(user.getUserid().equals(entity.getSubmiter())){
+            model.addAttribute("submiter",true);
+        }
         entity.setSubmiter(UserHelper.getUserName(entity.getSubmiter()));
         List<KnowledgehandingEntity> handingEntities = new ArrayList<KnowledgehandingEntity>();
         handingEntities = handingRepository.findAllByBid(bid);
