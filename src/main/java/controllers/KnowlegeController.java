@@ -7,6 +7,7 @@ import helpers.IdMaker;
 import helpers.SaveFilePathHelper;
 import helpers.UserHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -144,5 +145,19 @@ public class KnowlegeController {
             return "home";
         }
         return "knowledge/" + bid;
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public String getlist(Model model){
+        List<KnowledgeEntity> entities = new ArrayList<KnowledgeEntity>();
+        PageRequest pr = new PageRequest(0,50);
+        entities=repository.findAllDec(pr);
+        for (KnowledgeEntity k:entities
+             ) {
+            k.setSubmiter(UserHelper.getUserName(k.getSubmiter()));
+        }
+        model.addAttribute("list",entities);
+        return "knowledge/list";
+
     }
 }

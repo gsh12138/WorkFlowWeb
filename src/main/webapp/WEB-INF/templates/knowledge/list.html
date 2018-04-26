@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="/layout/default">
+<head>
+    <title th:text="'TECHSEM OA | 分享列表'"></title>
+    <link th:href="@{/resources/css/plugins/datapicker/datepicker3.css}" rel="stylesheet">
+</head>
+
+<body>
+<div class="col-lg-10" layout:fragment="pageheader">
+    <h2 th:text="'分享列表'"></h2>
+    <ol class="breadcrumb">
+        <li>
+            <a href="/">首页</a>
+        </li>
+        <li class="active">
+            <strong th:text="'分享列表'"></strong>
+        </li>
+
+    </ol>
+</div>
+<div class="wrapper wrapper-content  animated fadeInRight" layout:fragment="content">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5 th:text="'分享列表'"></h5>
+                    <div class="pull-right">
+                        <a href="/knowledge/submit" class="btn btn-primary btn-xs">发起分享</a>
+                    </div>
+
+                </div>
+                <div class="ibox-content">
+                    <div class="m-b-lg">
+                        <div class="input-group">
+                            <a data-toggle="modal" class="btn btn-primary pull-right" href="#modal-form">查询</a>
+                        </div>
+                        <div id="modal-form"  class="modal fade" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-sm-12 b-r">
+                                                <h3 class="m-t-none m-b">查询</h3>
+                                                <form role="form" class="form-horizontal" method="post">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-3 control-label">填写人</label>
+                                                        <div class="col-sm-6">
+                                                            <input name="submiter" type="text" class="form-control"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-3 control-label">填写日期</label>
+                                                        <div class="col-sm-9">
+                                                        <div class="input-daterange input-group" id="datepicker">
+                                                            <input type="text" class="input-sm form-control" name="start"/>
+                                                            <span class="input-group-addon">to</span>
+                                                            <input type="text" class="input-sm form-control" name="end"/>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-3 control-label">主题</label>
+                                                        <div class="col-sm-9">
+                                                            <input name="zt" type="text" class="form-control"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-3 control-label">关键词</label>
+                                                        <div class="col-sm-9">
+                                                            <select class="form-control" name="ycfl" id="ycfl">
+                                                                <option>option 1</option>
+                                                                <option>option 2</option>
+                                                                <option>option 3</option>
+                                                                <option>option 4</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-3 control-label">次要关键词</label>
+                                                        <div class="col-sm-9">
+                                                            <input name="cygjc" type="text" class="form-control"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-4 col-sm-offset-8">
+                                                            <button class="btn btn-primary btn-w-m" type="submit">查询</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="m-t-md">
+
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover issue-tracker">
+                            <tbody>
+
+                            <tr th:each="know:${list}">
+
+                                <td class="issue-info">
+                                    <a th:text="${know.bid}"
+                                       th:href="'/knowledge/'+${know.bid}">
+                                        ISSUE-23
+                                    </a>
+
+                                    <small th:text="${know.zt}">
+                                        This is issue with the coresponding note
+                                    </small>
+                                </td>
+                                <td th:text="'发起人:'+${know.submiter}">
+                                    Adrian Novak
+                                </td>
+                                <td th:text="${#dates.format(know.submitdate,'yyyy-MM-dd')}">
+                                    12.02.2015 10:00 am
+                                </td>
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div layout:fragment="addjs">
+    <script th:src="@{/resources/js/plugins/datapicker/bootstrap-datepicker.js}"></script>
+    <script th:src="@{/resources/js/plugins/datapicker/bootstrap-datepicker.zh-CN.js}"></script>
+</div>
+<script layout:fragment="script">
+    $('#datepicker').datepicker({
+        keyboardNavigation: false,
+        forceParse: false,
+        autoclose: true
+    });
+</script>
+</body>
+</html>
